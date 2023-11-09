@@ -38,11 +38,10 @@ const (
 )
 
 // CloudLoggingOptions return options for writing structured Google logging entries
-// https://github.com/remko/cloudrun-slog
-func CloudLoggingOptions() *slog.HandlerOptions {
+func CloudLoggingOptions(minimumLevel slog.Level) *slog.HandlerOptions {
 	return &slog.HandlerOptions{
 		AddSource: true,
-		Level:     slog.LevelDebug,
+		Level:     minimumLevel,
 		ReplaceAttr: func(groups []string, a slog.Attr) slog.Attr {
 			if a.Key == slog.MessageKey {
 				a.Key = "message"
@@ -64,8 +63,8 @@ func CloudLoggingOptions() *slog.HandlerOptions {
 type CloudLoggingHandler struct{ handler slog.Handler }
 
 // NewCloudLoggingHandler return a new Handler that outputs JSON understood by the structured log agent.
-func NewCloudLoggingHandler() *CloudLoggingHandler {
-	return &CloudLoggingHandler{handler: slog.NewJSONHandler(os.Stderr, CloudLoggingOptions())}
+func NewCloudLoggingHandler(minLevel slog.Level) *CloudLoggingHandler {
+	return &CloudLoggingHandler{handler: slog.NewJSONHandler(os.Stderr, CloudLoggingOptions(minLevel))}
 }
 
 // Enabled implements slog.Handler.Enabled
