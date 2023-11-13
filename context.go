@@ -6,7 +6,7 @@ import (
 	"log/slog"
 )
 
-var slogkey = struct{}{}
+var slogkey = struct{ *slog.Logger }{}
 
 // Ctx returns the logger associated with the context or the default Logger if absent
 func Ctx(ctx context.Context) *slog.Logger {
